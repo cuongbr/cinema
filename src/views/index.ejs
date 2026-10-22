@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đặt vé xem phim</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f3f5f9; color: #172033; }
+    header { background: #18213a; color: white; padding: 28px 8%; }
+    main { max-width: 900px; margin: 32px auto; padding: 0 20px; }
+    .movie { background: white; padding: 24px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 3px 12px #0001; }
+    .time { display: inline-block; padding: 10px 14px; margin: 6px 8px 0 0; background: #e2e9ff; border-radius: 8px; color: #172033; text-decoration: none; }
+    .time:hover { background: #cbd8ff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Đặt vé xem phim</h1>
+    <p>Chọn phim và xem các suất chiếu hiện có</p>
+  </header>
+  <main>
+    <% movies.forEach(movie => { %>
+      <section class="movie">
+        <h2><%= movie.title %></h2>
+        <p>Thể loại: <%= movie.genre %> · Thời lượng: <%= movie.duration %> phút</p>
+        <strong>Suất chiếu:</strong><br>
+        <% movie.showtimes.forEach(showtime => { %>
+          <a class="time" href="/showtimes/<%= showtime.id %>">
+            <%= showtime.time %> · <%= Number(showtime.price).toLocaleString('vi-VN') %> đ
+          </a>
+        <% }); %>
+      </section>
+    <% }); %>
+  </main>
+</body>
+</html>

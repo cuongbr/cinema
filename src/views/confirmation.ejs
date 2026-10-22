@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đặt vé thành công</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f3f5f9; color: #172033; }
+    main { max-width: 560px; margin: 70px auto; background: white; padding: 32px; border-radius: 12px; }
+    h1 { color: #087b49; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Đặt vé thành công!</h1>
+    <p>Mã đặt vé: <strong>#<%= booking.id %></strong></p>
+    <p>Phim: <strong><%= booking.title %></strong></p>
+    <p>Suất chiếu: <%= booking.time %></p>
+    <p>Ghế: <strong><%= booking.seat_labels %></strong></p>
+    <p>Tổng tiền: <strong><%= Number(booking.total_amount).toLocaleString('vi-VN') %> đ</strong></p>
+    <p>Thanh toán giả lập: <strong><%= booking.status === 'paid' ? 'Đã thanh toán' : 'Chờ thanh toán' %></strong></p>
+    <a href="/">Về danh sách phim</a>
+  </main>
+</body>
+</html>

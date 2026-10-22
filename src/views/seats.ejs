@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chọn ghế</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f3f5f9; color: #172033; }
+    main { max-width: 620px; margin: 50px auto; background: white; padding: 30px; border-radius: 12px; }
+    .screen { text-align: center; background: #dbe2f0; padding: 12px; margin: 30px 0; }
+    .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    .seat { cursor: pointer; text-align: center; font-weight: bold; }
+    .seat input { position: absolute; opacity: 0; }
+    .seat span { display: block; padding: 14px 0; border-radius: 8px; background: #b9e6cf; }
+    .seat input:checked + span { background: #5367d8; color: white; }
+    .seat.taken { cursor: not-allowed; }
+    .seat.taken span { background: #ccc; }
+    .field { display: block; margin: 16px 0; }
+    .field input { display: block; box-sizing: border-box; width: 100%; padding: 10px; margin-top: 6px; }
+    button { background: #18213a; color: white; border: 0; border-radius: 8px; padding: 12px 18px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="/">← Về danh sách phim</a>
+    <h1><%= showtime.title %></h1>
+    <p>Suất chiếu: <%= showtime.time %></p>
+    <p>Giá mỗi ghế: <%= Number(showtime.ticket_price).toLocaleString('vi-VN') %> đ</p>
+
+    <form action="/bookings" method="post" data-price="<%= Number(showtime.ticket_price) %>">
+      <input type="hidden" name="showtime_id" value="<%= showtime.id %>">
+
+      <div class="screen">MÀN HÌNH</div>
+      <div class="grid">
+        <% seats.forEach(seat => { %>
+          <label class="seat <%= seat.booked ? 'taken' : '' %>">
+            <input
+              type="checkbox"
+              name="seat_ids"
+              value="<%= seat.id %>"
+              <%= seat.booked ? 'disabled' : '' %>
+            >
+            <span><%= seat.label %></span>
+          </label>
+        <% }); %>
+      </div>
+
+      <p>Ghế xanh: còn trống · Ghế xanh đậm: đang chọn · Ghế xám: đã đặt</p>
+      <p id="summary">Chưa chọn ghế</p>
+
+      <label class="field">
+        Họ tên
+        <input name="customer_name" maxlength="100" required>
+      </label>
+
+      <label class="field">
+        Email
+        <input name="customer_email" type="email" maxlength="190" required>
+      </label>
+
+      <button type="submit">Thanh toán giả lập và đặt vé</button>
+    </form>
+  </main>
+
+  <script>
+    const price = Number(document.querySelector('form').dataset.price);
+    const checkboxes = document.querySelectorAll('input[name="seat_ids"]');
+    const summary = document.getElementById('summary');
+
+    function updateSummary() {
+      const count = [...checkboxes].filter(input => input.checked).length;
+      summary.textContent = count
+        ? `${count} ghế · Tổng tiền: ${(count * price).toLocaleString('vi-VN')} đ`
+        : 'Chưa chọn ghế';
+    }
+
+    checkboxes.forEach(input => input.addEventListener('change', updateSummary));
+  </script>
+</body>
+</html>
