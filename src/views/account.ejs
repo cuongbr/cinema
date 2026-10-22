@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="vi">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Vé của tôi | CineVé</title><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/cgv-home.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Vé của tôi | ICTUcine</title><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/cgv-home.css"></head>
 <body class="inner-page cg-inner-page">
   <%- include('partials/inner-header') %>
   <main class="cg-container account-main"><div class="breadcrumb"><a href="/">TRANG CHỦ</a><span>/</span><span>VÉ CỦA TÔI</span></div>
@@ -8,5 +8,5 @@
     <% if (!bookings.length) { %><div class="account-empty"><span>✦</span><h2>CHƯA CÓ VÉ NÀO</h2><p>Chọn một bộ phim và đặt vé khi đang đăng nhập để xem tại đây.</p><a href="/#phim">Xem phim đang chiếu →</a></div><% } else { %>
       <div class="account-bookings"><% bookings.forEach(booking => { %><article class="account-booking"><div><small>MÃ VÉ #<%= booking.id %> · <%= booking.status === 'paid' ? 'ĐÃ THANH TOÁN MÔ PHỎNG' : 'ĐANG CHỜ' %></small><h2><%= booking.title %></h2><p><%= booking.time %> · Ghế <%= booking.seat_labels || '—' %></p></div><div><strong><%= Number(booking.total_amount).toLocaleString('vi-VN') %> ₫</strong><a href="/bookings/<%= booking.id %>">XEM VÉ →</a></div></article><% }); %></div>
     <% } %>
-  </main><footer class="cg-footer"><div class="cg-container cg-inner-footer">CINEVÉ DEMO · LỊCH CHIẾU VÀ THANH TOÁN CHỈ LÀ MÔ PHỎNG</div></footer>
+  </main><footer class="cg-footer"><div class="cg-container cg-inner-footer">ICTUcine DEMO · LỊCH CHIẾU VÀ THANH TOÁN CHỈ LÀ MÔ PHỎNG</div></footer>
 </body></html>

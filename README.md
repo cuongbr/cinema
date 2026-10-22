@@ -1,8 +1,8 @@
-# CineVé — website đặt vé xem phim (Đề 11)
+# Hệ thống Đặt vé Xem phim / Sự kiện
 
-CineVé là dự án học tập về đặt vé xem phim. Người dùng có thể xem danh sách phim, chọn suất chiếu và ghế, đặt vé, tạo tài khoản và xem lại vé trong mục **Vé của tôi**. Hệ thống còn có dashboard giám sát bằng Prometheus/Grafana và log tập trung bằng Loki.
+ICTUcine là dự án học tập về đặt vé xem phim. Người dùng có thể xem danh sách phim, chọn suất chiếu và ghế, đặt vé, tạo tài khoản và xem lại vé trong mục **Vé của tôi**. Hệ thống còn có dashboard giám sát bằng Prometheus/Grafana và log tập trung bằng Loki.
 
-> **Lưu ý:** CineVé không phải website chính thức của CGV và không liên kết với CGV. Danh sách phim là dữ liệu tham khảo lưu ngày **22/10/2026**, không cập nhật trực tiếp. Suất chiếu, giá vé, ưu đãi và trạng thái thanh toán trên website đều là **mô phỏng**; không có giao dịch thật.
+> **Lưu ý:** ICTUcine không phải website chính thức của CGV và không liên kết với CGV. Danh sách phim là dữ liệu tham khảo lưu ngày **22/10/2026**, không cập nhật trực tiếp. Suất chiếu, giá vé, ưu đãi và trạng thái thanh toán trên website đều là **mô phỏng**; không có giao dịch thật. Mục **Sự kiện** hiện là phần giới thiệu giao diện, chưa có luồng đặt vé sự kiện.
 
 ## Công nghệ
 
