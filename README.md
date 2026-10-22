@@ -1,95 +1,135 @@
-# Hệ thống đặt vé xem phim - Đề 11
+# CineVé — website đặt vé xem phim (Đề 11)
 
-Website cho phép xem phim, chọn suất chiếu, chọn ghế và thanh toán giả lập.
-Hệ thống chạy bằng Docker Compose với Express, MySQL, phpMyAdmin, Nginx,
-Prometheus và Grafana.
+CineVé là dự án học tập về đặt vé xem phim. Người dùng có thể xem danh sách phim, chọn suất chiếu và ghế, đặt vé, tạo tài khoản và xem lại vé trong mục **Vé của tôi**. Hệ thống còn có dashboard giám sát bằng Prometheus/Grafana và log tập trung bằng Loki.
 
-## Chuẩn bị
+> **Lưu ý:** CineVé không phải website chính thức của CGV và không liên kết với CGV. Danh sách phim là dữ liệu tham khảo lưu ngày **22/10/2026**, không cập nhật trực tiếp. Suất chiếu, giá vé, ưu đãi và trạng thái thanh toán trên website đều là **mô phỏng**; không có giao dịch thật.
 
-Cài Docker Desktop và bảo đảm Docker Engine đang chạy.
+## Công nghệ
 
-Sao chép `.env.example` thành `.env`, sau đó thay các giá trị mẫu bằng
-những mật khẩu mạnh, khác nhau. Không đưa `.env` lên GitHub.
+| Thành phần | Vai trò |
+| --- | --- |
+| Node.js, Express, EJS | Website và xử lý đặt vé |
+| MySQL 8.4 | Phim, suất chiếu, ghế, vé, tài khoản và phiên đăng nhập |
+| Nginx | Chuyển tiếp yêu cầu đến ứng dụng |
+| Prometheus, Grafana | Thu thập và hiển thị số liệu |
+| Nginx exporter, MySQL exporter, cAdvisor | Cung cấp số liệu giám sát |
+| Loki, Promtail | Tập trung log ứng dụng và Nginx |
+| phpMyAdmin | Xem và quản lý database khi phát triển |
 
-## Khởi chạy
+Toàn bộ dịch vụ chạy bằng Docker Compose. Các cổng trong `compose.yaml` chỉ mở trên `127.0.0.1` để dùng ở máy cục bộ.
+
+## Chạy dự án từ đầu
+
+### 1. Chuẩn bị
+
+Cài và mở Docker Desktop. Trong PowerShell, vào thư mục dự án rồi tạo file cấu hình:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Mở `.env` và thay ba mật khẩu mẫu: `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD`, `GRAFANA_ADMIN_PASSWORD`. File `.env` đã được Git bỏ qua; không đưa mật khẩu lên GitHub.
+
+### 2. Tạo database
+
+Khởi động MySQL và phpMyAdmin trước:
+
+```powershell
+docker compose up -d db phpmyadmin
+docker compose ps
+```
+
+Mở [phpMyAdmin](http://localhost:8080), đăng nhập với tên `movie_app` và mật khẩu `MYSQL_PASSWORD` trong `.env`. Chọn database `movie_booking`, vào tab **Import** và nhập lần lượt:
+
+1. `db/schema.sql` — tạo bảng phim/suất chiếu và hai phim mẫu.
+2. `db/booking.sql` — tạo bảng ghế/vé và 12 ghế mẫu.
+
+Nếu MySQL vừa khởi động, đợi vài giây rồi tải lại phpMyAdmin. Chỉ cần nhập hai file SQL này khi tạo database lần đầu; **không xóa volume MySQL** nếu muốn giữ dữ liệu đã đặt.
+
+### 3. Khởi động website và dịch vụ giám sát
 
 ```powershell
 docker compose up -d --build
 docker compose ps
 ```
 
-Lần chạy đầu, mở phpMyAdmin tại http://localhost:8080, đăng nhập bằng
-`movie_app` và mật khẩu `MYSQL_PASSWORD` trong `.env`. Chọn database
-`movie_booking`, nhập lần lượt `db/schema.sql` rồi `db/booking.sql`.
+Khi app khởi động, nó tự tạo bảng `users`, `auth_sessions` và thêm `bookings.user_id` nếu chưa có. Dữ liệu vé cũ được giữ nguyên. Có thể kiểm tra bằng:
 
-Để nạp danh sách phim cho giao diện mới, chạy thêm:
+```powershell
+curl.exe http://localhost:8081/health/db
+```
+
+Kết quả cần có `"status":"ok"`.
+
+### 4. Nạp danh sách phim cho giao diện
 
 ```powershell
 docker compose exec -T app node src/seed-cgv-catalog.js
 ```
 
-Lệnh này chỉ bổ sung phim và suất chiếu mô phỏng, không xóa dữ liệu đặt vé
-đã có. Danh sách 27 phim là ảnh chụp dữ liệu ngày 22/10/2026 từ
-[trang CGV trên MoMo](https://www.momo.vn/cinema/rap/cgv), được lưu ở
-`src/data/cgv-catalog.json` (gồm cả phim sắp chiếu). Poster tải từ URL của nguồn khi mở trang;
-vì thế poster cần kết nối Internet. Giao diện CineVé là dự án học tập,
-không phải website của CGV. Lịch chiếu, giá vé và thanh toán đều là mô phỏng.
+Script nạp 27 phim tham khảo và tạo suất chiếu **mô phỏng**. Chạy lại không tạo trùng phim và không xóa vé đã đặt. Dữ liệu phim được lưu ở `src/data/cgv-catalog.json`, tham khảo [danh sách CGV trên MoMo](https://www.momo.vn/cinema/rap/cgv) ngày 22/10/2026, gồm cả phim sắp chiếu. Poster lấy từ URL trong dữ liệu nên cần Internet để hiển thị.
 
-Ứng dụng tự tạo bảng `users`, `auth_sessions` và bổ sung `bookings.user_id`
-khi khởi động. Dữ liệu đặt vé cũ được giữ nguyên. Có thể chạy thủ công lệnh
-`docker compose exec -T app node src/migrate-auth.js` để kiểm tra migration.
+Cuối cùng mở **[http://localhost:8081](http://localhost:8081)** để dùng website.
 
-## Địa chỉ truy cập
+## Các địa chỉ cục bộ
 
-- Website qua Nginx: http://localhost:8081
-- phpMyAdmin: http://localhost:8080
-- Website trực tiếp để kiểm tra: http://localhost:3001
-- Prometheus: http://localhost:9090
-- Grafana: http://localhost:3002
+| Dịch vụ | Địa chỉ |
+| --- | --- |
+| Website qua Nginx | [http://localhost:8081](http://localhost:8081) |
+| Website trực tiếp | [http://localhost:3001](http://localhost:3001) |
+| phpMyAdmin | [http://localhost:8080](http://localhost:8080) |
+| Prometheus | [http://localhost:9090](http://localhost:9090) |
+| Grafana | [http://localhost:3002](http://localhost:3002) |
+| Loki | [http://localhost:3100](http://localhost:3100) |
 
-MySQL chỉ mở trên máy cục bộ ở cổng 3307.
+MySQL có thể được truy cập cục bộ ở `127.0.0.1:3307`.
 
-## Giám sát
+## Dùng thử đặt vé
 
-Prometheus lấy số liệu từ Nginx exporter, MySQL exporter và cAdvisor mỗi
-15 giây. Mở `http://localhost:9090/targets` để kiểm tra các target ở trạng
-thái `UP`. Trong Grafana, đăng nhập bằng tài khoản `admin` và mật khẩu
-`GRAFANA_ADMIN_PASSWORD` trong `.env`.
+1. Chọn **Đăng ký** ở đầu trang, tạo tài khoản rồi đăng nhập. Bạn cũng có thể đặt vé với tư cách khách.
+2. Chọn phim, suất chiếu và ghế còn trống; mỗi lần đặt tối đa 12 ghế.
+3. Xác nhận để mở trang vé. Trạng thái “đã thanh toán” chỉ là giả lập.
+4. Khi đã đăng nhập, mở **Vé của tôi** để xem lại các vé đặt bằng tài khoản đó.
 
-Dashboard `Movie Booking - Giám sát hệ thống` có bốn panel: trạng thái
-MySQL (`mysql_up`), trạng thái Nginx (`nginx_up`), số yêu cầu Nginx mỗi
-giây (`rate(nginx_http_requests_total[5m])`) và RAM theo dịch vụ Docker
-Compose. Grafana tự nạp dashboard trong thư mục **Movie Booking** từ
-`grafana/dashboards/movie-booking.json`. Bản dashboard đã tạo thủ công cũng
-được lưu ở `grafana/dashboard.json` để tham khảo.
+Vé đặt trước khi đăng nhập không tự chuyển vào tài khoản. Vé khách vẫn xem được bằng đường dẫn trang xác nhận. MySQL có ràng buộc `unique_showtime_seat`, nên một ghế không thể được đặt hai lần cho cùng suất chiếu.
 
-## Log tập trung
+## Giám sát và log
 
-Loki nhận log từ Promtail. Promtail đọc access log của ứng dụng và Nginx
-trong các Docker volume `app_logs` và `nginx_logs`. Mở Grafana Explore,
-chọn nguồn dữ liệu **Loki** để tìm log. Ba truy vấn LogQL và cách tạo dữ
-liệu mẫu được ghi trong `docs/logql.md`.
+Prometheus lấy số liệu mỗi 15 giây từ chính Prometheus, Nginx exporter, MySQL exporter và cAdvisor. Kiểm tra trạng thái tại [Prometheus Targets](http://localhost:9090/targets). Trên [Grafana](http://localhost:3002), đăng nhập bằng `admin` và mật khẩu `GRAFANA_ADMIN_PASSWORD` trong `.env`.
 
-## Demo chức năng
+Dashboard **Movie Booking - Giám sát hệ thống** được nạp tự động vào thư mục **Movie Booking**. Các panel hiển thị trạng thái MySQL, trạng thái Nginx, lượt truy cập Nginx mỗi giây và RAM theo dịch vụ. Nguồn nằm trong `grafana/dashboards/movie-booking.json`; file `grafana/dashboard.json` là bản tạo thủ công để tham khảo.
 
-1. Mở website qua Nginx và chọn một suất chiếu.
-2. Có thể đăng ký và đăng nhập ở góc trên trang để lưu vé vào tài khoản.
-3. Chọn ghế còn trống, nhập tên và email.
-4. Bấm “Xác nhận đặt vé”.
-5. Xem trang xác nhận; thành viên có thể mở “Vé của tôi” để xem lại vé.
-6. Quay lại suất chiếu để thấy ghế đã đặt chuyển màu xám, hoặc mở phpMyAdmin
-   để kiểm tra bảng `bookings` và `tickets`.
+Trong **Grafana → Explore**, chọn nguồn dữ liệu **Loki** để xem log ứng dụng và Nginx. Xem các truy vấn mẫu trong [docs/logql.md](docs/logql.md).
 
-Một ghế trong một suất chiếu chỉ được đặt một lần nhờ ràng buộc
-`unique_showtime_seat` trong MySQL.
+## Kiểm tra và lệnh thường dùng
 
-## Bảo mật hiện có
+```powershell
+# Xem trạng thái container
+docker compose ps
 
-- Ứng dụng chạy trong container bằng tài khoản `node`, không chạy root.
-- Mật khẩu nằm trong `.env`, file này được Git bỏ qua.
-- MySQL và phpMyAdmin chỉ mở cổng trên `127.0.0.1`.
-- Nginx có các security headers cơ bản.
-- Ứng dụng tắt header `X-Powered-By`; Nginx không công bố số phiên bản.
-- Mật khẩu tài khoản được băm bằng scrypt; cookie đăng nhập chỉ chứa token ngẫu
-  nhiên, có `HttpOnly` và `SameSite=Lax`. Vé của thành viên chỉ mở bằng tài
-  khoản đã đặt. Vé đặt với tư cách khách vẫn xem được qua đường dẫn xác nhận.
+# Xem log ứng dụng khi trang không mở được
+docker compose logs --tail 100 app nginx db
+
+# Kiểm tra website và database
+curl.exe http://localhost:8081/health
+curl.exe http://localhost:8081/health/db
+
+# Dựng lại ứng dụng sau khi sửa code
+docker compose up -d --build app
+
+# Dừng dịch vụ nhưng giữ dữ liệu trong volume
+docker compose down
+```
+
+Có thể chạy `npm ci` rồi `node scripts/smoke-auth.js` trên máy cục bộ để kiểm tra đăng ký, đăng nhập, đặt vé theo tài khoản và đăng xuất. Script tạo tài khoản/vé tạm trong database đang chạy và xóa chúng sau khi kiểm tra. Không dùng `docker compose down -v` nếu muốn giữ phim, vé và dashboard đã lưu.
+
+## Cấu trúc chính
+
+- `src/server.js`: các trang, API sức khỏe và xử lý đặt vé.
+- `src/auth.js`, `src/migrate-auth.js`: đăng nhập, phiên và cập nhật bảng tài khoản.
+- `src/views/`, `src/public/`: giao diện EJS, CSS và tài nguyên.
+- `db/`: cấu trúc MySQL và dữ liệu mẫu ban đầu.
+- `src/data/cgv-catalog.json`, `src/seed-cgv-catalog.js`: danh sách phim tham khảo và script nạp dữ liệu.
+- `nginx/`, `prometheus/`, `grafana/`, `loki/`, `promtail/`: cấu hình chuyển tiếp, giám sát và log.
+
+Mật khẩu tài khoản được băm bằng scrypt. Cookie phiên dùng token ngẫu nhiên với `HttpOnly` và `SameSite=Lax`; vé của thành viên chỉ xem được bằng đúng tài khoản đã đặt.
