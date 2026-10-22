@@ -42,8 +42,9 @@ thái `UP`. Trong Grafana, đăng nhập bằng tài khoản `admin` và mật k
 Dashboard `Movie Booking - Giám sát hệ thống` có bốn panel: trạng thái
 MySQL (`mysql_up`), trạng thái Nginx (`nginx_up`), số yêu cầu Nginx mỗi
 giây (`rate(nginx_http_requests_total[5m])`) và RAM theo dịch vụ Docker
-Compose. Bản JSON của dashboard nằm ở `grafana/dashboard.json` để lưu cùng
-mã nguồn.
+Compose. Grafana tự nạp dashboard trong thư mục **Movie Booking** từ
+`grafana/dashboards/movie-booking.json`. Bản dashboard đã tạo thủ công cũng
+được lưu ở `grafana/dashboard.json` để tham khảo.
 
 ## Log tập trung
 
@@ -69,3 +70,4 @@ Một ghế trong một suất chiếu chỉ được đặt một lần nhờ r
 - Mật khẩu nằm trong `.env`, file này được Git bỏ qua.
 - MySQL và phpMyAdmin chỉ mở cổng trên `127.0.0.1`.
 - Nginx có các security headers cơ bản.
+- Ứng dụng tắt header `X-Powered-By`; Nginx không công bố số phiên bản.
