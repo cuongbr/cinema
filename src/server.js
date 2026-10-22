@@ -3,14 +3,20 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const pool = require('./db');
+const migrateAuth = require('./migrate-auth');
+const { hashPassword, verifyPassword, createSession, clearSession, attachUser, sameOrigin } = require('./auth');
+const movieCatalog = require('./data/cgv-catalog.json').movies;
+const catalogByTitle = new Map(movieCatalog.map(movie => [movie.title, movie]));
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 
 app.disable('x-powered-by');
+app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit: '10kb' }));
+app.use('/assets', express.static(path.join(__dirname, 'public')));
 
 const accessLog = process.env.ACCESS_LOG_FILE
   ? fs.createWriteStream(process.env.ACCESS_LOG_FILE, { flags: 'a' })
@@ -36,6 +42,102 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(attachUser);
+app.use(['/register', '/login', '/logout', '/bookings'], sameOrigin);
+
+function authError(res, view, message, values = {}, status = 400) {
+  return res.status(status).render(view, { error: message, values });
+}
+
+app.get('/register', (req, res) => {
+  if (req.currentUser) return res.redirect('/account');
+  res.render('register', { error: null, values: {} });
+});
+
+app.post('/register', async (req, res) => {
+  if (req.currentUser) return res.redirect('/account');
+  const name = String(req.body.name || '').trim();
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
+  const confirm = String(req.body.confirm_password || '');
+  const values = { name, email };
+  if (!name || name.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 190) {
+    return authError(res, 'register', 'Vui lòng nhập tên và email hợp lệ.', values);
+  }
+  if (password.length < 8 || password.length > 128) {
+    return authError(res, 'register', 'Mật khẩu cần có từ 8 đến 128 ký tự.', values);
+  }
+  if (password !== confirm) return authError(res, 'register', 'Mật khẩu xác nhận chưa khớp.', values);
+  try {
+    const passwordHash = await hashPassword(password);
+    const [result] = await pool.query('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)', [name, email, passwordHash]);
+    await createSession(req, res, result.insertId);
+    res.redirect('/account');
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') return authError(res, 'register', 'Email này đã được đăng ký.', values, 409);
+    console.error('Không thể đăng ký:', error);
+    res.status(500).send('Không thể đăng ký tài khoản');
+  }
+});
+
+app.get('/login', (req, res) => {
+  if (req.currentUser) return res.redirect('/account');
+  res.render('login', { error: null, values: {} });
+});
+
+app.post('/login', async (req, res) => {
+  if (req.currentUser) return res.redirect('/account');
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
+  if (!email || email.length > 190 || !password || password.length > 128) {
+    return authError(res, 'login', 'Email hoặc mật khẩu không đúng.', { email }, 401);
+  }
+  try {
+    const [[user]] = await pool.query('SELECT id, password_hash FROM users WHERE email = ?', [email]);
+    if (!user || !(await verifyPassword(password, user.password_hash))) {
+      return authError(res, 'login', 'Email hoặc mật khẩu không đúng.', { email }, 401);
+    }
+    await createSession(req, res, user.id);
+    res.redirect('/account');
+  } catch (error) {
+    console.error('Không thể đăng nhập:', error);
+    res.status(500).send('Không thể đăng nhập');
+  }
+});
+
+app.post('/logout', async (req, res) => {
+  try {
+    await clearSession(req, res);
+    res.redirect('/');
+  } catch (error) {
+    console.error('Không thể đăng xuất:', error);
+    res.status(500).send('Không thể đăng xuất');
+  }
+});
+
+app.get('/account', async (req, res) => {
+  if (!req.currentUser) return res.redirect('/login');
+  try {
+    const [bookings] = await pool.query(`
+      SELECT b.id, b.status, b.total_amount, m.title,
+        DATE_FORMAT(st.starts_at, '%d/%m/%Y %H:%i') AS time,
+        GROUP_CONCAT(s.label ORDER BY s.id SEPARATOR ', ') AS seat_labels
+      FROM bookings b
+      JOIN showtimes st ON st.id = b.showtime_id
+      JOIN movies m ON m.id = st.movie_id
+      LEFT JOIN tickets t ON t.booking_id = b.id
+      LEFT JOIN seats s ON s.id = t.seat_id
+      WHERE b.user_id = ?
+      GROUP BY b.id, b.status, b.total_amount, m.title, st.starts_at
+      ORDER BY b.id DESC
+    `, [req.currentUser.id]);
+    res.render('account', { bookings });
+  } catch (error) {
+    console.error('Không tải được tài khoản:', error);
+    res.status(500).send('Không tải được tài khoản');
+  }
+});
+
 app.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query(`
@@ -46,6 +148,7 @@ app.get('/', async (req, res) => {
         s.ticket_price
       FROM movies m
       LEFT JOIN showtimes s ON s.movie_id = m.id
+        AND s.starts_at > (UTC_TIMESTAMP() + INTERVAL 7 HOUR)
       ORDER BY m.id, s.starts_at
     `);
 
@@ -54,6 +157,7 @@ app.get('/', async (req, res) => {
     for (const row of rows) {
       if (!movieMap.has(row.id)) {
         movieMap.set(row.id, {
+          id: row.id,
           title: row.title,
           genre: row.genre,
           duration: row.duration_minutes,
@@ -70,7 +174,18 @@ app.get('/', async (req, res) => {
       }
     }
 
-    res.render('index', { movies: [...movieMap.values()] });
+    const allMovies = [...movieMap.values()];
+    const catalogMovies = allMovies
+      .filter(movie => catalogByTitle.has(movie.title))
+      .map(movie => ({ ...movie, ...catalogByTitle.get(movie.title) }));
+    catalogMovies.sort((a, b) => movieCatalog.findIndex(movie => movie.title === a.title) - movieCatalog.findIndex(movie => movie.title === b.title));
+    res.render('index', {
+      movies: catalogMovies.length ? catalogMovies : allMovies,
+      catalogDate: '22/10/2026',
+      todayISO: new Intl.DateTimeFormat('sv-SE', {
+        timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).format(new Date())
+    });
   } catch (error) {
     console.error('Không tải được phim:', error);
     res.status(500).send('Không tải được danh sách phim');
@@ -90,7 +205,7 @@ app.get('/showtimes/:id', async (req, res) => {
         s.ticket_price
       FROM showtimes s
       JOIN movies m ON m.id = s.movie_id
-      WHERE s.id = ?
+      WHERE s.id = ? AND s.starts_at > (UTC_TIMESTAMP() + INTERVAL 7 HOUR)
     `, [id]);
 
     if (!showtime) {
@@ -120,8 +235,8 @@ app.post('/bookings', async (req, res) => {
     ? req.body.seat_ids
     : req.body.seat_ids ? [req.body.seat_ids] : [];
   const seatIds = [...new Set(rawSeatIds.map(Number))];
-  const name = String(req.body.customer_name || '').trim();
-  const email = String(req.body.customer_email || '').trim();
+  const name = req.currentUser ? req.currentUser.name : String(req.body.customer_name || '').trim();
+  const email = req.currentUser ? req.currentUser.email : String(req.body.customer_email || '').trim();
 
   const invalidSeats = seatIds.some(id => !Number.isSafeInteger(id) || id < 1);
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -141,7 +256,7 @@ app.post('/bookings', async (req, res) => {
     await connection.beginTransaction();
 
     const [[showtime]] = await connection.query(
-      'SELECT ticket_price FROM showtimes WHERE id = ?',
+      'SELECT ticket_price FROM showtimes WHERE id = ? AND starts_at > (UTC_TIMESTAMP() + INTERVAL 7 HOUR)',
       [showtimeId]
     );
 
@@ -165,9 +280,9 @@ app.post('/bookings', async (req, res) => {
 
     const [result] = await connection.query(`
       INSERT INTO bookings
-        (showtime_id, customer_name, customer_email, status, total_amount)
-      VALUES (?, ?, ?, 'pending', ?)
-    `, [showtimeId, name, email, totalAmount]);
+        (showtime_id, customer_name, customer_email, user_id, status, total_amount)
+      VALUES (?, ?, ?, ?, 'pending', ?)
+    `, [showtimeId, name, email, req.currentUser ? req.currentUser.id : null, totalAmount]);
 
     for (const seatId of seatIds) {
       await connection.query(`
@@ -210,7 +325,7 @@ app.get('/bookings/:id', async (req, res) => {
 
   try {
     const [[booking]] = await pool.query(`
-      SELECT b.id, b.status, b.total_amount, m.title,
+      SELECT b.id, b.user_id, b.status, b.total_amount, m.title,
         DATE_FORMAT(st.starts_at, '%d/%m/%Y %H:%i') AS time,
         (
           SELECT GROUP_CONCAT(s.label ORDER BY s.id SEPARATOR ', ')
@@ -225,6 +340,9 @@ app.get('/bookings/:id', async (req, res) => {
     `, [id]);
 
     if (!booking) {
+      return res.status(404).send('Không tìm thấy vé');
+    }
+    if (booking.user_id && (!req.currentUser || Number(booking.user_id) !== Number(req.currentUser.id))) {
       return res.status(404).send('Không tìm thấy vé');
     }
 
@@ -251,6 +369,8 @@ app.get('/health/db', async (req, res) => {
   }
 });
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Website đang chạy tại http://localhost:${port}`);
-});
+migrateAuth()
+  .then(() => app.listen(port, '0.0.0.0', () => {
+    console.log(`Website đang chạy tại http://localhost:${port}`);
+  }))
+  .catch(error => { console.error('Không thể khởi tạo tài khoản:', error); process.exit(1); });

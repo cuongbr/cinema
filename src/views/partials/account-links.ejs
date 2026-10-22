@@ -1,0 +1,12 @@
+<div class="cg-utility"><div class="cg-container">
+  <a href="/#su-kien">✉ TIN MỚI & ƯU ĐÃI</a>
+  <% if (currentUser) { %>
+    <a href="/account">▣ VÉ CỦA TÔI</a>
+    <span class="cg-user-name">XIN CHÀO, <%= currentUser.name %></span>
+    <form action="/logout" method="post"><button type="submit">ĐĂNG XUẤT</button></form>
+  <% } else { %>
+    <a href="/login">♙ ĐĂNG NHẬP</a>
+    <a href="/register">ĐĂNG KÝ</a>
+  <% } %>
+  <span class="cg-language">VN　EN</span>
+</div></div>

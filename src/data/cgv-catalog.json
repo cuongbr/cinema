@@ -1,0 +1,222 @@
+{
+  "snapshotDate": "2026-10-22",
+  "source": "https://www.momo.vn/cinema/rap/cgv",
+  "movies": [
+    {
+      "title": "Trại Buôn Người",
+      "genre": "Hành Động, Gay Cấn",
+      "duration": 135,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/867383626301392-tbnpo.jpg?size=SM",
+      "banner": "https://cinema.momocdn.net/img/74805855983673840-tbn1.jpg?size=M",
+      "openingDate": "2026-09-25"
+    },
+    {
+      "title": "Án Mạng Karaoke",
+      "genre": "Hài, Bí Ẩn, Gay Cấn",
+      "duration": 96,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/3863953741906020-anmkta.jpg?size=SM",
+      "banner": "https://cinema.momocdn.net/img/3097784044964566-am1.jpg?size=M",
+      "openingDate": "2026-10-30"
+    },
+    {
+      "title": "Quỷ Ăn Tạng 4: Hổ Tinh",
+      "genre": "Kinh Dị, Hành Động, Gay Cấn",
+      "duration": 111,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/2675537174708980-ty4ht.png?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/92d8b44731233659da75e0652b59454574b04749d52d78496142827718a18ecd?size=M",
+      "openingDate": "2026-10-16"
+    },
+    {
+      "title": "Ngọn Đồi Hoa Hồng Anh",
+      "genre": "Hoạt Hình, Chính Kịch",
+      "duration": 91,
+      "poster": "https://image-fworker.momocdn.net/momo-external/639043f648d3276f319033d9f54c0c765d9ac360ecd08490d6d0a9cc3f20de03?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/b9d5cb7654f864df03a745e46323d68ebe58632dde450604ee43189d4a08a7ab?size=M",
+      "openingDate": "2026-10-16"
+    },
+    {
+      "title": "Oán Linh Đòi Mạng",
+      "genre": "Kinh Dị, Chính Kịch, Bí Ẩn",
+      "duration": 99,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/3789934196779460-oanlinhdoimang.jpg?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/66721a0af46bec2eb9738b2a6f9388c1134281b39ea2d3b9ad24434ba609b568?size=M",
+      "openingDate": "2026-10-23"
+    },
+    {
+      "title": "Phim Street Fighter",
+      "genre": "Hài, Giả Tượng, Hành Động",
+      "duration": 119,
+      "poster": "https://image-fworker.momocdn.net/momo-external/828b56d93d2f00be168fb17e06cdf8ab0051a3b59762b65d45d6eb9eba6df8dd?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/c414b59aed044445cef90fec892296f9dc0fd6db932ca7144fff38e6bf4583f5?size=M",
+      "openingDate": "2026-10-16"
+    },
+    {
+      "title": "Shaun the Sheep: \"Quái Lạ\" Ghé Nhà",
+      "genre": "Hài, Hoạt Hình, Phiêu Lưu, Gia Đình",
+      "duration": 81,
+      "poster": "https://image-fworker.momocdn.net/momo-external/eb5b60d0fe91019e17234516476138a6530ef520344acb3dfe386e2d4c46e787?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/e820f82b9167ea94e13c0fba9ca11c5757d23e4efbaf5aa09f2520a90c2da1a4?size=M",
+      "openingDate": "2026-10-16"
+    },
+    {
+      "title": "Clayface",
+      "genre": "Kinh Dị, Khoa Học Viễn Tưởng, Gay Cấn",
+      "duration": 109,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/3869267109340679-Clayface_600x800.jpg?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/cc1818fbe83939c59751f8346cc735335e91f3424640dd846018cc4e66b621b7?size=M",
+      "openingDate": "2026-10-23"
+    },
+    {
+      "title": "Người Mẹ Khác",
+      "genre": "Kinh Dị",
+      "duration": 93,
+      "poster": "https://image-fworker.momocdn.net/momo-external/790fe238eb2308d323a04a34154e5ab1a59d86e33deceefc4036adb6ef15bacb?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/dd4be7b676401ed142722e1c3591f7d8454891702bec814189ff950875e9f847?size=M",
+      "openingDate": "2026-10-09"
+    },
+    {
+      "title": "Cá Voi Nuốt Chửng",
+      "genre": "Gay Cấn",
+      "duration": 98,
+      "poster": "https://image-fworker.momocdn.net/momo-external/149c2c8ae8abb42ba784d596c291455e38de294ab52cd27e56ea484ad71382e3?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/a9b501e99ac5070566e0b2313c2dde1c50edf93ac7585de69933b2e7d5c0f750?size=M",
+      "openingDate": "2026-10-16"
+    },
+    {
+      "title": "Verity: Bí Mật Bị Chôn Vùi",
+      "genre": "Bí Ẩn, Gay Cấn",
+      "duration": 114,
+      "poster": "https://image-fworker.momocdn.net/momo-external/82f58bede9aaec5588e338b29ecee0f047c415ba675a5f93a05078b57b92c503?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/8c5526c9b5a25434e332fd78a0b08982b887faae8e4e980743d04e0f66ed7bec?size=M",
+      "openingDate": "2026-10-16"
+    },
+    {
+      "title": "Stray Kids World Tour RUN IT LIVE VIEWING",
+      "genre": "Concert, LIVE, Âm Nhạc",
+      "duration": 195,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/3343044663104749-StrayKids_LiveViewing_600x800.jpg?size=SM",
+      "banner": "https://cinema.momocdn.net/img/3343241431265305-straykidthumb.jpg?size=M",
+      "openingDate": "2026-11-07"
+    },
+    {
+      "title": "Ngự Miêu Phá Án",
+      "genre": "Hoạt Hình, Giả Tưởng, Bí Ấn",
+      "duration": 97,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/3691152596963362-ngumieuphaan.jpg?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/aec70c568348c9144941424971d0ff396f63ca93a9818babe4aeaef48e6cfd7f?size=M",
+      "openingDate": "2026-10-30"
+    },
+    {
+      "title": "Cõi Nguyền",
+      "genre": "Kinh Dị, Bí Ẩn, Gay Cấn",
+      "duration": 95,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/3864187640624590-coinguyen.jpg?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/9aab20dfc187204b95305e4eae8bc4b971b6c6c60e728ac2e0fa056bf9b6f326?size=M",
+      "openingDate": "2026-10-23"
+    },
+    {
+      "title": "Bambi: Lãnh Địa Săn Mồi",
+      "genre": "Kinh Dị, Gay Cấn",
+      "duration": 80,
+      "poster": "https://image-fworker.momocdn.net/momo-external/4140b16629aff9f3eebd8b8170879c043fcc37cbfc6f32eee282c062924e1929?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/4e43cc67c2e69ebe87f6e801acc5b18a852725ec4c254152b5ddb89cd2687566?size=M",
+      "openingDate": "2026-10-23"
+    },
+    {
+      "title": "Án Mạng Xém Hoàn Hảo",
+      "genre": "Hài",
+      "duration": 124,
+      "poster": "https://image-fworker.momocdn.net/momo-external/3d0d781323fed1882f4e06caa26290403f839b97302b7d533aafd951762331e4?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/a78b97c09c25d25c174b1b4525960b0242801b87cebff5656b73721bbdc17829?size=M",
+      "openingDate": "2026-10-09"
+    },
+    {
+      "title": "Scotty: Giải Cứu Hoàng Thượng",
+      "genre": "Hoạt Hình, Phiêu Lưu, Gia Đình",
+      "duration": 80,
+      "poster": "https://image-fworker.momocdn.net/momo-external/fdc22ae3dce27335ad24f18cac5f551b35359cff9ce8132f0e5f87063d01cb38?size=M",
+      "banner": "https://homepage.momocdn.net/default/s/no-image-momo.jpg",
+      "openingDate": "2026-10-02"
+    },
+    {
+      "title": "Trái Tim Quái Thú",
+      "genre": "Phiêu Lưu, Hành Động",
+      "duration": 121,
+      "poster": "https://image-fworker.momocdn.net/momo-external/304f5cf9079dcf76feb4b8ac2f5b4b3dca9ce8fe2b0a07839834866924309080?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/240285abfebcf9331012abb7517d5ced2c879fd85a10e8f5b3843cefb5def618?size=M",
+      "openingDate": "2026-10-02"
+    },
+    {
+      "title": "Quyết Cua Anh Này",
+      "genre": "Hài, Lãng Mạn",
+      "duration": 115,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/1368015935726095-henryfirstdate.jpg?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/1a5d693cf6e5fb367f8750308fc82cacfc8d3c33c4c2c36369a9b87265eea778?size=M",
+      "openingDate": "2026-10-02"
+    },
+    {
+      "title": "Hòn Đảo Quên Lãng",
+      "genre": "Hài, Hoạt Hình, Phiêu Lưu, Gia Đình, Giả Tượng",
+      "duration": 109,
+      "poster": "https://image-fworker.momocdn.net/momo-external/8490e4f879c24c612bf417ca1f1d5570a71179cdc10cb574a297200aab6643df?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/477d7adac49836631fd2b75ab9145d455821bd6218afcf971ac536fb2b659a57?size=M",
+      "openingDate": "2026-09-25"
+    },
+    {
+      "title": "Avengers: Hồi Kết - Phiên Bản Đặc Biệt (Chiếu lại)",
+      "genre": "Khoa Học Viễn Tưởng, Phiêu Lưu, Hành Động",
+      "duration": 180,
+      "poster": "https://image-fworker.momocdn.net/momo-external/5ae579829a348a0fa937aa4c198e125efa985ce1c5ff6787e71de813ed451e52?size=M",
+      "banner": "https://image-fworker.momocdn.net/momo-external/2f5c6574f64b9755792b09391e268d3c6f427d90980156d4c82658f47e588f55?size=M",
+      "openingDate": "2026-09-25"
+    },
+    {
+      "title": "Vùng Đất Quỷ Dữ",
+      "genre": "Kinh Dị, Phiêu Lưu, Gay Cấn",
+      "duration": 94,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/601095563808280-470x700-residentevil_1.jpg?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/e52642e96de77bc98f0f68f98fcde417fee2abefb4d2f604776488a6aa9ac1d6?size=M",
+      "openingDate": "2026-09-18"
+    },
+    {
+      "title": "Lên Hương",
+      "genre": "Hài, Gay Cấn",
+      "duration": 120,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/169975628854232523-lhfinal.png?size=SM",
+      "banner": "https://cinema.momocdn.net/img/35672561412059349-d0485845080ee150b81f.jpg?size=M",
+      "openingDate": "2026-09-14"
+    },
+    {
+      "title": "Bát Tiên! Truy Tìm Lưu Ly Đăng",
+      "genre": "Hài, Hoạt Hình, Giả Tượng, Phiêu Lưu",
+      "duration": 143,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/66354116138203447-batien.png?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/0a329bb9920415b74c0ab04321ef91bb16d2a7a552187d893a37a2663842922f?size=M",
+      "openingDate": "2026-09-11"
+    },
+    {
+      "title": "Hộ Linh Tráng Sĩ (Bản dựng rút gọn)",
+      "genre": "Huyền Sử, Hành Động, Chính Kịch",
+      "duration": 135,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/169599329090397828-hltsshort20m.png?size=SM",
+      "banner": "https://image-fworker.momocdn.net/momo-external/ad0e8c96f75601423d395bb7b8533fede1aa65b36433fd960f07b61b99fa97b8?size=M",
+      "openingDate": "2026-08-30"
+    },
+    {
+      "title": "Phim Shin - Cậu Bé Bút Chì: Kỳ Kỳ Quái Quái! Kỳ Nghỉ Yêu Quái Của Tớ!",
+      "genre": "Hài, Hoạt Hình, Phiêu Lưu",
+      "duration": 100,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/71278599805511190-shin.jpg?size=SM",
+      "banner": "https://image.tmdb.org/t/p/w780/3TwUt1vUmbPaUMJSm7luCbDABTB.jpg",
+      "openingDate": "2026-08-21"
+    },
+    {
+      "title": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "genre": "Hài, Hoạt Hình, Phiêu Lưu, Hành Động",
+      "duration": 131,
+      "poster": "https://cinema.momocdn.net/convert-webp/img/31314080127809956-Untitled-1.jpg?size=M",
+      "banner": "https://cinema.momocdn.net/img/30817239567297364-c2bUvZG7uwdM4AmH0wT8HXXKeBg.jpg",
+      "openingDate": "2026-10-23"
+    }
+  ]
+}

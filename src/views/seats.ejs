@@ -1,80 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chọn ghế</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f3f5f9; color: #172033; }
-    main { max-width: 620px; margin: 50px auto; background: white; padding: 30px; border-radius: 12px; }
-    .screen { text-align: center; background: #dbe2f0; padding: 12px; margin: 30px 0; }
-    .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
-    .seat { cursor: pointer; text-align: center; font-weight: bold; }
-    .seat input { position: absolute; opacity: 0; }
-    .seat span { display: block; padding: 14px 0; border-radius: 8px; background: #b9e6cf; }
-    .seat input:checked + span { background: #5367d8; color: white; }
-    .seat.taken { cursor: not-allowed; }
-    .seat.taken span { background: #ccc; }
-    .field { display: block; margin: 16px 0; }
-    .field input { display: block; box-sizing: border-box; width: 100%; padding: 10px; margin-top: 6px; }
-    button { background: #18213a; color: white; border: 0; border-radius: 8px; padding: 12px 18px; cursor: pointer; }
-  </style>
-</head>
-<body>
-  <main>
-    <a href="/">← Về danh sách phim</a>
-    <h1><%= showtime.title %></h1>
-    <p>Suất chiếu: <%= showtime.time %></p>
-    <p>Giá mỗi ghế: <%= Number(showtime.ticket_price).toLocaleString('vi-VN') %> đ</p>
-
-    <form action="/bookings" method="post" data-price="<%= Number(showtime.ticket_price) %>">
-      <input type="hidden" name="showtime_id" value="<%= showtime.id %>">
-
-      <div class="screen">MÀN HÌNH</div>
-      <div class="grid">
-        <% seats.forEach(seat => { %>
-          <label class="seat <%= seat.booked ? 'taken' : '' %>">
-            <input
-              type="checkbox"
-              name="seat_ids"
-              value="<%= seat.id %>"
-              <%= seat.booked ? 'disabled' : '' %>
-            >
-            <span><%= seat.label %></span>
-          </label>
-        <% }); %>
-      </div>
-
-      <p>Ghế xanh: còn trống · Ghế xanh đậm: đang chọn · Ghế xám: đã đặt</p>
-      <p id="summary">Chưa chọn ghế</p>
-
-      <label class="field">
-        Họ tên
-        <input name="customer_name" maxlength="100" required>
-      </label>
-
-      <label class="field">
-        Email
-        <input name="customer_email" type="email" maxlength="190" required>
-      </label>
-
-      <button type="submit">Thanh toán giả lập và đặt vé</button>
-    </form>
-  </main>
-
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#faf8ea"><title>Chọn ghế · <%= showtime.title %> | CineVé</title><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/cgv-home.css"></head>
+<body class="inner-page cg-inner-page">
+  <div class="cg-demo-notice">CINEVÉ DEMO · DỰ ÁN HỌC TẬP · SUẤT CHIẾU VÀ THANH TOÁN MÔ PHỎNG</div><%- include('partials/account-links') %><div class="cg-filmstrip" aria-hidden="true"></div>
+  <header class="cg-header"><div class="cg-container cg-header-inner"><a href="/" class="cg-logo" aria-label="CineVé trang chủ">CINE<span>VÉ</span><i>★</i></a><nav aria-label="Điều hướng chính"><a href="/#phim">PHIM</a><a href="/#dat-ve">LỊCH CHIẾU</a><a href="/#su-kien">SỰ KIỆN</a><a href="/#thong-tin">VỀ DỰ ÁN</a></nav><a class="cg-buy-tab" href="/#phim">CHỌN PHIM <span>↗</span></a></div></header><div class="cg-filmstrip" aria-hidden="true"></div>
+  <main class="shell booking-main"><div class="breadcrumb"><a href="/">TRANG CHỦ</a><span>/</span><span>CHỌN GHẾ</span></div><div class="page-heading"><div class="eyebrow"><span class="eyebrow-line"></span> BƯỚC 02 / 03</div><h1>CHỌN <em>GHẾ NGỒI</em></h1><p>Chọn vị trí yêu thích và hoàn tất thông tin để giữ vé.</p></div>
+    <form action="/bookings" method="post" data-price="<%= Number(showtime.ticket_price) %>" class="booking-layout" id="booking-form"><input type="hidden" name="showtime_id" value="<%= showtime.id %>"><section class="seat-panel"><div class="seat-panel-heading"><div><span>PHÒNG CHIẾU · CINEVÉ</span><h2><%= showtime.title %></h2></div><span class="screen-icon" aria-hidden="true">✦</span></div><div class="screen"><span>MÀN HÌNH</span></div><div class="seat-grid" aria-label="Sơ đồ ghế"><% seats.forEach(seat => { %><label class="seat <%= seat.booked ? 'taken' : '' %>"><input type="checkbox" name="seat_ids" value="<%= seat.id %>" aria-label="Ghế <%= seat.label %>" <%= seat.booked ? 'disabled' : '' %>><span><%= seat.label %></span></label><% }); %></div><div class="seat-legend"><span><i class="legend-available"></i>Còn trống</span><span><i class="legend-selected"></i>Đang chọn</span><span><i class="legend-taken"></i>Đã đặt</span></div></section>
+    <aside class="booking-sidebar"><div class="booking-card"><div class="eyebrow light"><span class="eyebrow-line"></span> VÉ CỦA BẠN</div><h2><%= showtime.title %></h2><div class="booking-info-row"><span>SUẤT CHIẾU</span><strong><%= showtime.time %></strong></div><div class="booking-info-row"><span>GIÁ / GHẾ</span><strong><%= Number(showtime.ticket_price).toLocaleString('vi-VN') %> ₫</strong></div><div class="booking-info-row"><span>GHẾ ĐÃ CHỌN</span><strong id="selected-seats">Chưa chọn</strong></div><div class="booking-total"><span>TỔNG CỘNG</span><strong id="total-price">0 ₫</strong></div><p id="summary" class="booking-hint" aria-live="polite">Vui lòng chọn ít nhất 1 ghế.</p></div><div class="customer-card"><h3>THÔNG TIN KHÁCH HÀNG</h3><% if (!currentUser) { %><p class="account-prompt"><a href="/login">Đăng nhập</a> để lưu vé vào mục “Vé của tôi”.</p><% } else { %><p class="account-prompt">Vé sẽ được lưu trong tài khoản <strong><%= currentUser.email %></strong>.</p><% } %><label class="field">Họ và tên<input name="customer_name" maxlength="100" autocomplete="name" placeholder="Nhập họ và tên" value="<%= currentUser ? currentUser.name : '' %>" required></label><label class="field">Email nhận vé<input name="customer_email" type="email" maxlength="190" autocomplete="email" placeholder="ten@example.com" value="<%= currentUser ? currentUser.email : '' %>" required></label><button class="button button-red submit-button" type="submit">XÁC NHẬN ĐẶT VÉ <span aria-hidden="true">→</span></button><p>Thanh toán chỉ được mô phỏng cho mục đích học tập.</p></div></aside></form>
+  </main><footer class="cg-footer"><div class="cg-container cg-inner-footer">CINEVÉ DEMO · LỊCH CHIẾU VÀ THANH TOÁN CHỈ LÀ MÔ PHỎNG</div></footer>
   <script>
-    const price = Number(document.querySelector('form').dataset.price);
-    const checkboxes = document.querySelectorAll('input[name="seat_ids"]');
+    const form = document.getElementById('booking-form');
+    const price = Number(form.dataset.price);
+    const checkboxes = [...form.querySelectorAll('input[name="seat_ids"]')];
+    const selectedSeats = document.getElementById('selected-seats');
+    const totalPrice = document.getElementById('total-price');
     const summary = document.getElementById('summary');
-
     function updateSummary() {
-      const count = [...checkboxes].filter(input => input.checked).length;
-      summary.textContent = count
-        ? `${count} ghế · Tổng tiền: ${(count * price).toLocaleString('vi-VN')} đ`
-        : 'Chưa chọn ghế';
+      const chosen = checkboxes.filter(input => input.checked);
+      selectedSeats.textContent = chosen.length ? chosen.map(input => input.nextElementSibling.textContent).join(', ') : 'Chưa chọn';
+      totalPrice.textContent = `${(chosen.length * price).toLocaleString('vi-VN')} ₫`;
+      summary.textContent = chosen.length ? `${chosen.length} ghế đã chọn · Sẵn sàng đặt vé` : 'Vui lòng chọn ít nhất 1 ghế.';
     }
-
     checkboxes.forEach(input => input.addEventListener('change', updateSummary));
+    form.addEventListener('submit', event => { if (!checkboxes.some(input => input.checked)) { event.preventDefault(); summary.textContent = 'Bạn cần chọn ít nhất 1 ghế trước khi tiếp tục.'; summary.scrollIntoView({ behavior: 'smooth', block: 'center' }); } });
   </script>
-</body>
-</html>
+</body></html>

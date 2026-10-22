@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Đăng nhập | CineVé</title><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/cgv-home.css"></head>
+<body class="inner-page cg-inner-page">
+  <%- include('partials/inner-header') %>
+  <main class="cg-container account-main"><div class="breadcrumb"><a href="/">TRANG CHỦ</a><span>/</span><span>ĐĂNG NHẬP</span></div>
+    <div class="account-card"><div class="account-eyebrow">THÀNH VIÊN CINEVÉ</div><h1>ĐĂNG NHẬP</h1><p>Xem lại vé đã đặt và tiếp tục hành trình điện ảnh của bạn.</p>
+      <% if (error) { %><div class="account-error" role="alert"><%= error %></div><% } %>
+      <form action="/login" method="post"><label class="field">Email<input type="email" name="email" value="<%= values.email || '' %>" autocomplete="email" maxlength="190" required></label><label class="field">Mật khẩu<input type="password" name="password" autocomplete="current-password" required></label><button class="button button-red account-submit" type="submit">ĐĂNG NHẬP <span aria-hidden="true">→</span></button></form>
+      <div class="account-switch">Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></div>
+    </div>
+  </main><footer class="cg-footer"><div class="cg-container cg-inner-footer">CINEVÉ DEMO · LỊCH CHIẾU VÀ THANH TOÁN CHỈ LÀ MÔ PHỎNG</div></footer>
+</body></html>

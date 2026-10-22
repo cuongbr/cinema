@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Đăng ký | CineVé</title><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/cgv-home.css"></head>
+<body class="inner-page cg-inner-page">
+  <%- include('partials/inner-header') %>
+  <main class="cg-container account-main"><div class="breadcrumb"><a href="/">TRANG CHỦ</a><span>/</span><span>ĐĂNG KÝ</span></div>
+    <div class="account-card"><div class="account-eyebrow">THÀNH VIÊN CINEVÉ</div><h1>TẠO TÀI KHOẢN</h1><p>Lưu các vé đặt từ bây giờ trong mục “Vé của tôi”.</p>
+      <% if (error) { %><div class="account-error" role="alert"><%= error %></div><% } %>
+      <form action="/register" method="post"><label class="field">Họ và tên<input name="name" value="<%= values.name || '' %>" autocomplete="name" maxlength="100" required></label><label class="field">Email<input type="email" name="email" value="<%= values.email || '' %>" autocomplete="email" maxlength="190" required></label><label class="field">Mật khẩu (ít nhất 8 ký tự)<input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="128" required></label><label class="field">Nhập lại mật khẩu<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" maxlength="128" required></label><button class="button button-red account-submit" type="submit">ĐĂNG KÝ <span aria-hidden="true">→</span></button></form>
+      <div class="account-switch">Đã có tài khoản? <a href="/login">Đăng nhập</a></div>
+    </div>
+  </main><footer class="cg-footer"><div class="cg-container cg-inner-footer">CINEVÉ DEMO · LỊCH CHIẾU VÀ THANH TOÁN CHỈ LÀ MÔ PHỎNG</div></footer>
+</body></html>

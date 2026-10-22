@@ -1,36 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Đặt vé xem phim</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f3f5f9; color: #172033; }
-    header { background: #18213a; color: white; padding: 28px 8%; }
-    main { max-width: 900px; margin: 32px auto; padding: 0 20px; }
-    .movie { background: white; padding: 24px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 3px 12px #0001; }
-    .time { display: inline-block; padding: 10px 14px; margin: 6px 8px 0 0; background: #e2e9ff; border-radius: 8px; color: #172033; text-decoration: none; }
-    .time:hover { background: #cbd8ff; }
-  </style>
+  <meta name="theme-color" content="#faf8ea">
+  <title>Phim đang chiếu · CineVé Demo</title>
+  <meta name="description" content="Trang đặt vé xem phim mô phỏng của dự án CineVé. Lịch chiếu và thanh toán là dữ liệu demo.">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/cgv-home.css">
 </head>
-<body>
-  <header>
-    <h1>Đặt vé xem phim</h1>
-    <p>Chọn phim và xem các suất chiếu hiện có</p>
-  </header>
+<body class="cg-home">
+  <div class="cg-demo-notice">CINEVÉ DEMO · DỰ ÁN HỌC TẬP · KHÔNG PHẢI WEBSITE CHÍNH THỨC CỦA CGV</div>
+  <div class="cg-top-ad"><div class="cg-container"><div class="cg-ad-logo">CINEVÉ <span>★</span></div><div class="cg-ad-copy"><strong>TUẦN LỄ ĐIỆN ẢNH</strong><span>Chạm vào những câu chuyện trên màn ảnh lớn</span></div><div class="cg-ad-ticket">VÉ PHIM<br><b>THẬT VUI!</b></div></div></div>
+  <%- include('partials/account-links') %>
+  <div class="cg-filmstrip" aria-hidden="true"></div>
+  <header class="cg-header"><div class="cg-container cg-header-inner"><a href="/" class="cg-logo" aria-label="CineVé trang chủ">CINE<span>VÉ</span><i>★</i></a><nav aria-label="Điều hướng chính"><a href="#phim">PHIM</a><a href="#dat-ve">LỊCH CHIẾU</a><a href="#su-kien">SỰ KIỆN</a><a href="#thong-tin">VỀ DỰ ÁN</a></nav><a class="cg-buy-tab" href="#phim">MUA VÉ NGAY <span>↗</span></a></div></header>
+  <div class="cg-filmstrip" aria-hidden="true"></div>
+  <div class="cg-container cg-shortcuts" id="dat-ve"><a href="#phim"><span class="cg-short-icon">▣</span><b>CINEVÉ CINEMAS</b><small>RẠP CHIẾU</small></a><a href="#phim"><span class="cg-short-icon">◉</span><b>NOW SHOWING</b><small>PHIM ĐANG CHIẾU</small></a><a href="#su-kien"><span class="cg-short-icon">★</span><b>SPECIAL</b><small>SỰ KIỆN</small></a><a href="#phim"><span class="cg-short-icon">▤</span><b>BOOK TICKET</b><small>ĐẶT VÉ DEMO</small></a><a href="#thong-tin"><span class="cg-short-icon">✆</span><b>CONTACT</b><small>VỀ DỰ ÁN</small></a></div>
   <main>
-    <% movies.forEach(movie => { %>
-      <section class="movie">
-        <h2><%= movie.title %></h2>
-        <p>Thể loại: <%= movie.genre %> · Thời lượng: <%= movie.duration %> phút</p>
-        <strong>Suất chiếu:</strong><br>
-        <% movie.showtimes.forEach(showtime => { %>
-          <a class="time" href="/showtimes/<%= showtime.id %>">
-            <%= showtime.time %> · <%= Number(showtime.price).toLocaleString('vi-VN') %> đ
-          </a>
-        <% }); %>
-      </section>
-    <% }); %>
+    <section class="cg-brick-zone" aria-label="Phim nổi bật"><div class="cg-container cg-slider"><div class="cg-slides"><% movies.slice(0, 5).forEach((movie, index) => { %><article class="cg-slide <%= index === 0 ? 'active' : '' %>" aria-hidden="<%= index !== 0 %>"><img src="<%= movie.banner || movie.poster || '/assets/posters/night-train.svg' %>" alt="" loading="<%= index === 0 ? 'eager' : 'lazy' %>"><div class="cg-slide-shade"></div><div class="cg-slide-copy"><span>PHIM NỔI BẬT <%= String(index + 1).padStart(2, '0') %> / 05</span><h1><%= movie.title %></h1><p><%= movie.genre %> · <%= movie.duration %> phút</p><% if (movie.showtimes.length) { %><a href="/showtimes/<%= movie.showtimes[0].id %>">ĐẶT VÉ DEMO <span aria-hidden="true">→</span></a><% } %></div></article><% }); %></div><button type="button" class="cg-slide-arrow prev" aria-label="Phim trước">‹</button><button type="button" class="cg-slide-arrow next" aria-label="Phim tiếp theo">›</button><div class="cg-dots" aria-label="Chọn phim nổi bật"><% movies.slice(0, 5).forEach((movie, index) => { %><button type="button" class="<%= index === 0 ? 'active' : '' %>" aria-label="Xem banner phim <%= movie.title %>" aria-pressed="<%= index === 0 %>"></button><% }); %></div></div></section>
+    <section class="cg-container cg-movie-section" id="phim"><div class="cg-section-heading"><span></span><h2>MOVIE SELECTION</h2><span></span></div><div class="cg-subheading"><b>PHIM TẠI CGV · GỒM SẮP CHIẾU</b><span>Danh sách tham khảo ngày <%= catalogDate %> · Suất chiếu và giá vé là mô phỏng</span></div><% if (!movies.length) { %><p>Hiện chưa có phim. Vui lòng quay lại sau.</p><% } %><div class="cg-movie-grid"><% movies.forEach((movie, index) => { %><article class="cg-movie"><div class="cg-poster-wrap"><img src="<%= movie.poster || (index % 2 === 0 ? '/assets/posters/night-train.svg' : '/assets/posters/summer.svg') %>" alt="Poster phim <%= movie.title %>" loading="lazy" referrerpolicy="no-referrer"><span class="cg-age-tag">DEMO</span><% if (movie.openingDate && movie.openingDate > todayISO) { %><span class="cg-coming-tag">SẮP CHIẾU</span><% } %><div class="cg-poster-overlay"><% if (movie.showtimes.length) { %><a href="/showtimes/<%= movie.showtimes[0].id %>">ĐẶT VÉ DEMO</a><% } else { %><span>CHƯA CÓ SUẤT CHIẾU</span><% } %></div></div><h3><%= movie.title %></h3><p><%= movie.genre %> · <%= movie.duration %> phút</p><div class="cg-showtimes"><% movie.showtimes.slice(0,2).forEach(showtime => { %><a href="/showtimes/<%= showtime.id %>" aria-label="Đặt vé demo phim <%= movie.title %>, <%= showtime.time %>"><%= showtime.time %></a><% }); %></div></article><% }); %></div></section>
+    <section class="cg-container cg-event-section" id="su-kien"><div class="cg-section-heading"><span></span><h2>EVENT</h2><span></span></div><div class="cg-event-ribbon">THÀNH VIÊN CINEVÉ　|　TIN MỚI & ƯU ĐÃI DEMO</div><div class="cg-event-grid"><div class="cg-event-card deal"><span>ƯU ĐÃI ĐIỆN ẢNH</span><strong>ĐỒNG GIÁ<br><em>70.000₫</em></strong><small>Minh họa giao diện · Không áp dụng giao dịch thật</small></div><div class="cg-event-card popcorn"><span>COMBO THẬT VUI</span><strong>PHIM HAY<br>BẮP GIÒN 🍿</strong><small>Trọn vẹn trải nghiệm cùng bạn bè</small></div><div class="cg-event-card birthday"><span>MEMBER DAY</span><strong>NGÀY CỦA<br>BẠN 🎉</strong><small>Một chút niềm vui, một chút điện ảnh</small></div><div class="cg-event-card tickets"><span>ĐẶT VÉ DỄ DÀNG</span><strong>CHỌN GHẾ<br>THEO Ý BẠN</strong><small>Thử ngay luồng đặt vé mô phỏng</small></div></div><div class="cg-promo-grid"><div class="cg-promo navy"><span>CINEVÉ</span><b>QUÀ TẶNG<br>ĐIỆN ẢNH</b><small>Trải nghiệm demo</small></div><div class="cg-promo orange"><span>CINEVÉ FAN CLUB</span><b>BẠN HẸN AI<br>ĐI XEM PHIM?</b><small>Chọn phim · Chọn ghế · Nhận vé</small></div><div class="cg-promo red"><span>CINEVÉ</span><b>RẠP CHIẾU<br>TRONG TẦM TAY</b><small>Đặt vé trực tuyến</small></div></div></section>
   </main>
+  <footer class="cg-footer" id="thong-tin"><div class="cg-container"><div class="cg-footer-top">CINÉVÉ　✦　CINEMA　✦　MOVIE SELECTION　✦　DEMO</div><div class="cg-footer-grid"><div><strong>CineVé Demo</strong><p>Website minh họa cho bài tập đặt vé xem phim. Giao diện tham khảo bố cục CGV, không liên kết hoặc đại diện CGV.</p></div><div><strong>Thông tin</strong><a href="#phim">Danh sách phim</a><a href="#su-kien">Sự kiện demo</a></div><div><strong>Đặt vé</strong><a href="#phim">Chọn phim</a><a href="#dat-ve">Xem lịch chiếu</a></div><div><strong>Lưu ý</strong><p>Danh sách phim là ảnh chụp dữ liệu ngày <%= catalogDate %>. Lịch chiếu, giá và thanh toán trên trang là mô phỏng.</p></div></div></div></footer>
+  <script>
+    const slides = [...document.querySelectorAll('.cg-slide')];
+    const dots = [...document.querySelectorAll('.cg-dots button')];
+    let currentSlide = 0;
+    function showSlide(next) { if (!slides.length) return; slides[currentSlide].classList.remove('active'); slides[currentSlide].setAttribute('aria-hidden', 'true'); dots[currentSlide].classList.remove('active'); dots[currentSlide].setAttribute('aria-pressed', 'false'); currentSlide = (next + slides.length) % slides.length; slides[currentSlide].classList.add('active'); slides[currentSlide].setAttribute('aria-hidden', 'false'); dots[currentSlide].classList.add('active'); dots[currentSlide].setAttribute('aria-pressed', 'true'); }
+    document.querySelector('.cg-slide-arrow.prev').addEventListener('click', () => showSlide(currentSlide - 1));
+    document.querySelector('.cg-slide-arrow.next').addEventListener('click', () => showSlide(currentSlide + 1));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => showSlide(index)));
+  </script>
 </body>
 </html>
