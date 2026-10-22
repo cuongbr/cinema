@@ -45,6 +45,13 @@ giây (`rate(nginx_http_requests_total[5m])`) và RAM theo dịch vụ Docker
 Compose. Bản JSON của dashboard nằm ở `grafana/dashboard.json` để lưu cùng
 mã nguồn.
 
+## Log tập trung
+
+Loki nhận log từ Promtail. Promtail đọc access log của ứng dụng và Nginx
+trong các Docker volume `app_logs` và `nginx_logs`. Mở Grafana Explore,
+chọn nguồn dữ liệu **Loki** để tìm log. Ba truy vấn LogQL và cách tạo dữ
+liệu mẫu được ghi trong `docs/logql.md`.
+
 ## Demo chức năng
 
 1. Mở website qua Nginx và chọn một suất chiếu.

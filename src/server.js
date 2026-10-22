@@ -1,6 +1,7 @@
 ﻿require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const pool = require('./db');
 
 const app = express();
@@ -9,6 +10,30 @@ const port = Number(process.env.PORT) || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
+
+const accessLog = process.env.ACCESS_LOG_FILE
+  ? fs.createWriteStream(process.env.ACCESS_LOG_FILE, { flags: 'a' })
+  : null;
+
+if (accessLog) {
+  accessLog.on('error', error => console.error('Lỗi ghi access log:', error));
+}
+
+app.use((req, res, next) => {
+  const startedAt = Date.now();
+  res.on('finish', () => {
+    const entry = JSON.stringify({
+      time: new Date().toISOString(),
+      service: 'app',
+      method: req.method,
+      path: req.path,
+      status: res.statusCode,
+      duration_ms: Date.now() - startedAt
+    });
+    if (accessLog) accessLog.write(`${entry}\n`);
+  });
+  next();
+});
 
 app.get('/', async (req, res) => {
   try {
